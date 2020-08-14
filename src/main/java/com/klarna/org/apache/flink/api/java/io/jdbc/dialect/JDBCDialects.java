@@ -46,7 +46,7 @@ public final class JDBCDialects {
         return Optional.empty();
     }
 
-    private static class DerbyDialect implements JDBCDialect {
+    public static class DerbyDialect implements JDBCDialect {
 
         private static final long serialVersionUID = 1L;
 
@@ -66,7 +66,7 @@ public final class JDBCDialects {
         }
     }
 
-    private static class MySQLDialect implements JDBCDialect {
+    public static class MySQLDialect implements JDBCDialect {
 
         private static final long serialVersionUID = 1L;
 
@@ -103,7 +103,7 @@ public final class JDBCDialects {
         }
     }
 
-    private static class PostgresDialect implements JDBCDialect {
+    public static class PostgresDialect implements JDBCDialect {
 
         private static final long serialVersionUID = 1L;
 
@@ -115,6 +115,16 @@ public final class JDBCDialects {
         @Override
         public Optional<String> defaultDriverName() {
             return Optional.of("org.postgresql.Driver");
+        }
+
+
+        @Override
+        public String quoteIdentifier(String identifier) {
+            String[] identifiers = identifier.split("\\.");
+            if (identifiers.length == 2) {
+                return "\"" + identifiers[0] + "\"." + "\"" + identifiers[1] + "\"";
+            }
+            return "\"" + identifier + "\"";
         }
 
         /**
