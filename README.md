@@ -1,46 +1,53 @@
 # Project Name
-> Short blurb about what your project does.
+> Java library provides [Apache Flink](https://flink.apache.org/) connector sink for JDBC database that can be used with Flink 1.8 runtime version.
+Connector code is backported from the latest Flink version (1.11) in order to be used in [Amazon Kinesis Data Analytics](https://aws.amazon.com/kinesis/data-analytics/) applications.
 
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
 [![Developed at Klarna][klarna-image]][klarna-url]
 
+At Klarna we use streaming applications extensively. Amazon Kinesis Data Analytics with Flink 1.8 is starting to be one of the choices for the development of new streaming analytics applications at Klarna. Unfortunately, some of the latest features developed in the Apache Flink project version after 1.8 are not available yet in Amazon Kinesis Data Analytics.
 
-One to two paragraph statement about your project and what it does.
-
-## First steps
-
-<details>
- <summary>Installation (for Admins)</summary>
-  
-  Currently, new repositories can be created only by a Klarna Open Source community lead. Please reach out to us if you need assistance.
-  
-  1. Create a new repository by clicking ‘Use this template’ button.
-  
-  2. Make sure your newly created repository is private.
-  
-  3. Enable Dependabot alerts in your candidate repo settings under Security & analysis. You need to enable ‘Allow GitHub to perform read-only analysis of this repository’ first.
-</details>
-
-1. Update `README.md` and `CHANGELOG.md`.
-
-2. Optionally, change `.github/CONTRIBUTING.md`.
-
-3. Do *not* edit `LICENSE`, `.github/CODE_OF_CONDUCT.md`, and `.github/SECURITY.md`.
+`flink-connector-jdbc-1.8` is a Java library that contains code backported from the latest Flink version (1.11) `flink-connector-jdbc` library that can be used in Amazon Kinesis Data Analytics / Flink 1.8.
 
 ## Usage example
 
-A few motivating and useful examples of how your project can be used. Spice this up with code blocks and potentially more screenshots.
+```java
+import com.klarna.org.apache.flink.api.java.io.jdbc.JDBCOptions;
+import com.klarna.org.apache.flink.api.java.io.jdbc.JDBCUpsertOutputFormat;
+import com.klarna.org.apache.flink.api.java.io.jdbc.JDBCUpsertSinkFunction;
 
-_For more examples and usage, please refer to the [Docs](TODO)._
+...
+env.addSource(createConsumer())
+   .addSink(new JDBCUpsertSinkFunction(JDBCUpsertOutputFormat.builder()
+            .setFieldNames(new String[]{
+                    "event_id",
+                    "created_at"
+            })
+            .setFieldTypes(new int[]{
+                    Types.VARCHAR,
+                    Types.TIMESTAMP
+            })
+            .setFlushIntervalMills(10000)
+            .setFlushMaxSize(5000)
+            .setKeyFields(new String[]{ "event_id" })
+            .setMaxRetryTimes(3)
+            .setOptions(JDBCOptions.builder()
+                    .setDBUrl(dbUrl)
+                    .setDriverName(Driver.class.getName())
+                    .setUsername(dbUsername)
+                    .setPassword(dbPassword)
+                    .setTableName(tableName)
+                    .build())
+            .build()));
+```
 
 ## Development setup
 
-Describe how to install all development dependencies and how to run an automated test-suite of some kind. Potentially do this for multiple platforms.
+This project uses [Maven](https://maven.apache.org/) to set up the development environment. The recommended workflow to build and install the library is the following.
 
 ```sh
-make install
-npm test
+mvn clean install
 ```
 
 ## How to contribute
