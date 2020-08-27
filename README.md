@@ -1,4 +1,4 @@
-# Project Name
+# flink-connector-jdbc
 > Java library provides [Apache Flink](https://flink.apache.org/) connector sink for JDBC database that can be used with Flink 1.8 runtime version.
 Connector code is backported from the latest Flink version (1.11) in order to be used in [Amazon Kinesis Data Analytics](https://aws.amazon.com/kinesis/data-analytics/) applications.
 
