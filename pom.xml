@@ -17,6 +17,14 @@
     <flink.version>1.8.2</flink.version>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub klarna-incubator Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/klarna-incubator/flink-connector-jdbc-1.8</url>
+    </repository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.flink</groupId>
