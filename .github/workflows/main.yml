@@ -15,4 +15,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Deploy package
-        run: mvn deploy -Dregistry=https://maven.pkg.github.com/klarna-incubator -Dtoken=GH_TOKEN
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn --settings settings.xml --file pom.xml deploy
